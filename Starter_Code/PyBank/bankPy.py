@@ -21,20 +21,21 @@ with open(pathFile) as csvFile:
     for row in readFile:
         dateD.append(row[0])
         proLosD.append(int(row[1]))
-        absP = abs(preNum - int(row[1]))#take the absolute value btw previous month and this month
-        if int(row[1]) < preNum: #if this month is a loss
-            netList.append(absP * -1) #input as the negative absolute value
-            if absP * -1 < proDec:
-                dateDec = row[0]
-                proDec = absP * -1
-        elif int(row[1]) > preNum: #if this month is profitable
-            netList.append(absP)
-            if absP > proInc:
-                dateInc = row[0]
-                proInc = absP
+        if preNum != 0:
+            absP = abs(preNum - int(row[1]))#take the absolute value btw previous month and this month
+            if int(row[1]) < preNum: #if this month is a loss
+                netList.append(absP * -1) #input as the negative absolute value
+                if absP * -1 < proDec:
+                    dateDec = row[0]
+                    proDec = absP * -1
+            elif int(row[1]) > preNum: #if this month is profitable
+                netList.append(absP)
+                if absP > proInc:
+                    dateInc = row[0]
+                    proInc = absP
         preNum = int(row[1]) #update this month to previous month        
     print(f"Total Months: {len(dateD)}")
     print(f"Total: ${sum(proLosD)}")
-    print(f"Average Change: ${round(sum(proLosD)/len(dateD),2)}")
+    print(f"Average Change: ${round(sum(netList)/len(netList),2)}")
     print(f"Greatest Increase in Profit: {dateInc} (${proInc})")
     print(f"Greatest Decrease in Profit: {dateDec} (${proDec})")
